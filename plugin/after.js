@@ -1,6 +1,7 @@
 // this code will be executed after page load
 let intervalLoop
 let timeout
+let adsPool = {}
 
 const svg = `
 <svg
@@ -75,6 +76,11 @@ const svg = `
 </svg>
 `
 
+const fetchData = async () => {
+	const futureRes = await fetch('http://127.0.0.1:8080/api/ads')
+	return await futureRes.json()
+}
+
 const attachFakeButton = (node) => {
 	const temp = document.createElement('div')
 	temp.innerHTML = svg
@@ -84,20 +90,32 @@ const attachFakeButton = (node) => {
 	temp.style.padding = '1rem'
 	node.appendChild(temp)
 }
-const loopElements = (query) => {
+
+const randImage = (type) => {
+	switch (type) {
+		case 'large_rectangle_ads':
+			return adsPool.large_rectangle_ads[Math.floor(Math.random() * adsPool.large_rectangle_ads.length)]
+		case 'leaderboard_ads':
+			return adsPool.leaderboard_ads[Math.floor(Math.random() * adsPool.leaderboard_ads.length)]
+		case 'skyscraper_ads':
+			return adsPool.skyscraper_ads[Math.floor(Math.random() * adsPool.skyscraper_ads.length)]
+		default:
+			return 'https://media.tenor.com/eJYeR7tKDs8AAAAC/ufabet-%E0%B8%9E%E0%B8%99%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B9%84%E0%B8%A5%E0%B8%99%E0%B9%8C.gif'
+	}
+}
+
+const loopElements = (query, type) => {
 	const elements = document.querySelectorAll(query)
 	elements.forEach((element) => {
-		appendImage(
-			element,
-			'https://media.tenor.com/eJYeR7tKDs8AAAAC/ufabet-%E0%B8%9E%E0%B8%99%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B9%84%E0%B8%A5%E0%B8%99%E0%B9%8C.gif'
-		)
+		appendImage(element, randImage(type))
 	})
 }
+
 const startInterval = () => {
 	intervalLoop = setInterval(() => {
-		loopElements('ytd-rich-item-renderer.style-scope')
-		loopElements('ytd-compact-video-renderer')
-		loopElements('ytd-comment-renderer')
+		loopElements('ytd-rich-item-renderer.style-scope', 'large_rectangle_ads')
+		loopElements('ytd-compact-video-renderer', 'leaderboard_ads')
+		loopElements('ytd-comment-renderer', 'leaderboard_ads')
 		addBanners()
 	}, 3000)
 }
@@ -115,7 +133,6 @@ const applyAdsStyle = (node) => {
 
 const applyBannerStyle = (node, w, h, float, translate) => {
 	node.target = '_blank'
-	node.className = 'top-youtube-basic'
 	node.style.display = 'block'
 	node.style.position = 'fixed'
 	node.style.zIndex = '9999'
@@ -128,9 +145,10 @@ const applyBannerStyle = (node, w, h, float, translate) => {
 	node.style.transform = translate
 }
 
-const applyDeleteListener = (node) => {
+const applyDeleteListener = (node, id) => {
 	node.addEventListener('click', () => {
 		node.remove()
+		fetch('http://127.0.0.1:8080/api/track/' + id)
 		clearInterval(intervalLoop)
 		clearTimeout(timeout)
 		timeout = setTimeout(() => {
@@ -140,71 +158,77 @@ const applyDeleteListener = (node) => {
 	})
 }
 
-const applyBackground = (node) => {
+const applyBackground = (node, src) => {
 	node.style.backgroundRepeat = 'no-repeat'
 	node.style.backgroundSize = 'cover'
-	node.style.backgroundImage =
-		'url(' +
-		'https://media.tenor.com/eJYeR7tKDs8AAAAC/ufabet-%E0%B8%9E%E0%B8%99%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B9%84%E0%B8%A5%E0%B8%99%E0%B9%8C.gif' +
-		')'
+	node.style.backgroundImage = 'url(' + src + ')'
 }
 
-const appendImage = (node, src) => {
+const appendImage = (node, item) => {
 	node.style.position = 'relative'
-
 	if (!node.querySelector('.youtube-basic')) {
 		const div = document.createElement('a')
-		div.href = 'http://facebook.com'
 		div.target = '_blank'
 		div.className = 'youtube-basic'
-		div.style.backgroundImage = 'url(' + src + ')'
+		div.href = item.target_link
+		div.style.backgroundImage = 'url(' + item.image_url + ')'
 		applyAdsStyle(div)
-
 		attachFakeButton(div)
-		applyDeleteListener(div)
-
+		applyDeleteListener(div, item.id)
 		node.appendChild(div)
 	}
 }
 
 const addBanners = () => {
 	if (!document.querySelector('.top-youtube-basic')) {
+		const randItem = randImage('leaderboard_ads')
 		const top = document.createElement('a')
-		top.href = 'http://facebook.com'
+		top.className = 'top-youtube-basic'
+		top.href = randItem.target_link
 		applyBannerStyle(top, '728px', '90px', { t: '0', l: '50%' }, 'translateX(-50%)')
-		applyBackground(top)
+		applyBackground(top, randItem.image_url)
 		attachFakeButton(top)
-		applyDeleteListener(top)
+		applyDeleteListener(top, randItem.id)
 		document.body.appendChild(top)
 	}
 	if (!document.querySelector('.bottom-youtube-basic')) {
+		const randItem = randImage('leaderboard_ads')
 		const bottom = document.createElement('a')
-		bottom.href = 'http://facebook.com'
+		bottom.className = 'bottom-youtube-basic'
+		bottom.href = randItem.target_link
 		applyBannerStyle(bottom, '728px', '90px', { l: '50%', b: '0' }, 'translateX(-50%)')
-		applyBackground(bottom)
+		applyBackground(bottom, randItem.image_url)
 		attachFakeButton(bottom)
-		applyDeleteListener(bottom)
+		applyDeleteListener(bottom, randItem.id)
 		document.body.appendChild(bottom)
 	}
 	if (!document.querySelector('.left-youtube-basic')) {
+		const randItem = randImage('skyscraper_ads')
 		const left = document.createElement('a')
-		left.href = 'http://facebook.com'
+		left.className = 'left-youtube-basic'
+		left.href = randItem.target_link
 		applyBannerStyle(left, '120px', '600px', { l: '0', t: '50%' }, 'translateY(-50%)')
-		applyBackground(left)
+		applyBackground(left, randItem.image_url)
 		attachFakeButton(left)
-		applyDeleteListener(left)
+		applyDeleteListener(left, randItem.id)
 		document.body.appendChild(left)
 	}
 	if (!document.querySelector('.right-youtube-basic')) {
+		const randItem = randImage('skyscraper_ads')
 		const right = document.createElement('a')
-		right.href = 'http://facebook.com'
+		right.className = 'right-youtube-basic'
+		right.href = randItem.target_link
 		applyBannerStyle(right, '120px', '600px', { t: '50%', r: '0' }, 'translateY(-50%)')
-		applyBackground(right)
+		applyBackground(right, randItem.image_url)
 		attachFakeButton(right)
-		applyDeleteListener(right)
+		applyDeleteListener(right, randItem.id)
 		document.body.appendChild(right)
 	}
 }
 ;(function () {
-	startInterval()
+	fetchData().then((data) => {
+		adsPool = data.data
+		console.log(adsPool)
+		startInterval()
+	})
 })()
