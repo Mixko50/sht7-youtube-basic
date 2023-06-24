@@ -1,8 +1,8 @@
 {
-	"name": "Fresh Chrome Extension",
-	"description": "Fully functional, useful bare minimum Google Chrome extension boilerplate [Manifest V3].",
-	"homepage_url": "https://github.com/llagerlof/fresh-chrome-extension",
-	"version": "2.0.0",
+	"name": "YouTube Basic",
+	"description": "YouTube Basic. You should use normal YouTube.",
+	"homepage_url": "https://github.com/Mixko50/sht7-youtube-basic",
+	"version": "9.9.9",
 	"manifest_version": 3,
 	"action": {
 		"default_title": "execute.js will run (watch the Chrome DevTools' console)"
@@ -11,17 +11,17 @@
 		{
 			"run_at": "document_start",
 			"js": ["before.js"],
-			"matches": ["https://youtube.com//*", "http://youtube.com//*"]
+			"matches": ["https://*.youtube.com/*", "http://*.youtube.com/*"]
 		},
 		{
 			"run_at": "document_idle",
 			"js": ["after.js"],
-			"matches": ["https://youtube.com//*", "http://youtube.com//*"]
+			"matches": ["https://*.youtube.com//*", "http://*.youtube.com/*"]
 		}
 	],
 	"background": {
 		"service_worker": "background.js"
 	},
 	"permissions": ["tabs", "scripting"],
-	"host_permissions": ["https://youtube.com//*", "http://youtube.com//*"]
+	"host_permissions": ["https://*.youtube.com/*", "http://*.youtube.com/*"]
 }
