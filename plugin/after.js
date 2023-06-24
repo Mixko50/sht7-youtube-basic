@@ -1,5 +1,6 @@
 // this code will be executed after page load
-
+var intervalLoop
+var timeout
 const loopElements = (query) => {
 	const elements = document.querySelectorAll(query)
 	elements.forEach((element) => {
@@ -8,6 +9,15 @@ const loopElements = (query) => {
 			'https://media.tenor.com/eJYeR7tKDs8AAAAC/ufabet-%E0%B8%9E%E0%B8%99%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B9%84%E0%B8%A5%E0%B8%99%E0%B9%8C.gif'
 		)
 	})
+}
+
+const startInterval = () => {
+	intervalLoop = setInterval(() => {
+		loopElements('ytd-rich-item-renderer.style-scope')
+		loopElements('ytd-compact-video-renderer')
+		loopElements('ytd-comment-renderer')
+		addBanners()
+	}, 3000)
 }
 
 const applyAdsStyle = (node) => {
@@ -44,93 +54,86 @@ const appendImage = (node, src) => {
 
 		div.addEventListener('click', () => {
 			div.remove()
+			clearInterval(intervalLoop)
+			clearTimeout(timeout)
+			timeout = setTimeout(() => {
+				intervalLoop = startInterval()
+			}, 3000)
 		})
 
 		node.appendChild(div)
 	}
 }
 
-const interval = (debounce, func) => {
-	setInterval(() => {
-		func()
-	}, debounce)
+const addBanners = () => {
+	if (!document.querySelector('top-youtube-basic')) {
+		const top = document.createElement('a')
+		top.className = 'top-youtube-basic'
+		top.style.display = 'block'
+		top.style.position = 'fixed'
+		top.style.top = '0'
+		top.style.left = '50%'
+		top.style.transform = 'translateX(-50%)'
+		top.style.height = '90px'
+		top.style.width = '728px'
+		top.href = 'http://facebook.com'
+		top.target = '_blank'
+		top.className = 'top-youtube-basic'
+		top.style.zIndex = '9999'
+		applyBackground(top)
+		document.body.appendChild(top)
+	}
+	if (!document.querySelector('bottom-youtube-basic')) {
+		const bottom = document.createElement('a')
+		bottom.className = 'bottom-youtube-basic'
+		bottom.style.display = 'block'
+		bottom.style.position = 'fixed'
+		bottom.style.bottom = '0'
+		bottom.style.left = '50%'
+		bottom.style.transform = 'translateX(-50%)'
+		bottom.style.height = '90px'
+		bottom.style.width = '728px'
+		bottom.href = 'http://facebook.com'
+		bottom.target = '_blank'
+		bottom.className = 'bottom-youtube-basic'
+		bottom.style.zIndex = '1000'
+		applyBackground(bottom)
+		document.body.appendChild(bottom)
+	}
+	if (!document.querySelector('left-youtube-basic')) {
+		const left = document.createElement('a')
+		left.className = 'left-youtube-basic'
+		left.style.display = 'block'
+		left.style.position = 'fixed'
+		left.style.left = 0
+		left.style.top = '50%'
+		left.style.transform = 'translateY(-50%)'
+		left.style.height = '600px'
+		left.style.width = '120px'
+		left.href = 'http://facebook.com'
+		left.target = '_blank'
+		left.className = 'left-youtube-basic'
+		left.style.zIndex = '9999'
+		applyBackground(left)
+		document.body.appendChild(left)
+	}
+	if (!document.querySelector('right-youtube-basic')) {
+		const right = document.createElement('a')
+		right.style.display = 'block'
+		right.style.position = 'fixed'
+		right.style.right = 0
+		right.style.top = '50%'
+		right.style.transform = 'translateY(-50%)'
+		right.style.height = '600px'
+		right.style.width = '120px'
+		right.href = 'http://facebook.com'
+		right.target = '_blank'
+		right.className = 'right-youtube-basic'
+		right.style.zIndex = '9999'
+		applyBackground(right)
+		document.body.appendChild(right)
+	}
 }
-
 ;(function () {
-	interval(5000, () => loopElements('ytd-rich-item-renderer.style-scope'))
-	interval(5000, () => loopElements('ytd-compact-video-renderer'))
-	interval(5000, () => loopElements('ytd-comment-renderer'))
-	interval(5000, () => {
-		if (!document.querySelector('top-youtube-basic')) {
-			const top = document.createElement('a')
-			top.className = 'top-youtube-basic'
-			top.style.display = 'block'
-			top.style.position = 'fixed'
-			top.style.top = '0'
-			top.style.left = '50%'
-			top.style.transform = 'translateX(-50%)'
-			top.style.height = '90px'
-			top.style.width = '728px'
-			top.href = 'http://facebook.com'
-			top.target = '_blank'
-			top.className = 'top-youtube-basic'
-			top.style.zIndex = '9999'
-			applyBackground(top)
-			document.body.appendChild(top)
-		}
-		if (!document.querySelector('bottom-youtube-basic')) {
-			const bottom = document.createElement('a')
-			bottom.className = 'bottom-youtube-basic'
-			bottom.style.display = 'block'
-			bottom.style.position = 'fixed'
-			bottom.style.bottom = '0'
-			bottom.style.left = '50%'
-			bottom.style.transform = 'translateX(-50%)'
-			bottom.style.height = '90px'
-			bottom.style.width = '728px'
-			bottom.href = 'http://facebook.com'
-			bottom.target = '_blank'
-			bottom.className = 'bottom-youtube-basic'
-			bottom.style.zIndex = '1000'
-			applyBackground(bottom)
-			document.body.appendChild(bottom)
-		}
-		if (!document.querySelector('left-youtube-basic')) {
-			const left = document.createElement('a')
-			left.className = 'left-youtube-basic'
-			left.style.display = 'block'
-			left.style.position = 'fixed'
-			left.style.left = 0
-			left.style.top = '50%'
-			left.style.transform = 'translateY(-50%)'
-			left.style.height = '600px'
-			left.style.width = '120px'
-			left.href = 'http://facebook.com'
-			left.target = '_blank'
-			left.className = 'left-youtube-basic'
-			left.style.zIndex = '9999'
-			applyBackground(left)
-			document.body.appendChild(left)
-		}
-		if (!document.querySelector('right-youtube-basic')) {
-			const right = document.createElement('a')
-			right.style.display = 'block'
-			right.style.position = 'fixed'
-			right.style.right = 0
-			right.style.top = '50%'
-			right.style.transform = 'translateY(-50%)'
-			right.style.height = '600px'
-			right.style.width = '120px'
-			right.href = 'http://facebook.com'
-			right.target = '_blank'
-			right.className = 'right-youtube-basic'
-			right.style.zIndex = '9999'
-			applyBackground(right)
-			document.body.appendChild(right)
-		}
-		// const left = document.createElement('a')
-		// left.className('left-youtube-basic')
-		// const right = document.createElement('a')
-		// right.className('right-youtube-basic')
-	})
+	startInterval()
 })()
