@@ -2,6 +2,7 @@ package fiber
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"server/endpoints"
 	"server/utils/config"
 )
 
@@ -13,9 +14,9 @@ func Init() {
 		AppName:       "Stupid Hackathon 7 - Youtube Basic",
 	})
 
-	// * Router
-	//app.Route("api/ads", router.Router)
+	// Router
+	app.Get("api/ads", endpoints.GetAllAds)
 
-	// * Listen
+	// Listen
 	app.Listen(config.C.Address)
 }
