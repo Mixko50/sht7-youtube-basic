@@ -111,12 +111,19 @@ const loopElements = (query, type) => {
 	})
 }
 
+const blockSkipButton = () => {
+	if (document.querySelectorAll('.ytp-ad-preview-container.countdown-next-to-thumbnail').length > 0) {
+		document.querySelector('span.ytp-ad-skip-button-container').remove()
+	}
+}
+
 const startInterval = () => {
 	intervalLoop = setInterval(() => {
 		loopElements('ytd-rich-item-renderer.style-scope', 'large_rectangle_ads')
 		loopElements('ytd-compact-video-renderer', 'leaderboard_ads')
 		loopElements('ytd-comment-renderer', 'leaderboard_ads')
 		addBanners()
+		blockSkipButton()
 	}, 3000)
 }
 
@@ -228,7 +235,6 @@ const addBanners = () => {
 ;(function () {
 	fetchData().then((data) => {
 		adsPool = data.data
-		console.log(adsPool)
 		startInterval()
 	})
 })()
