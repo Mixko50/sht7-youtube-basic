@@ -66,7 +66,7 @@ const appendImage = (node, src) => {
 }
 
 const addBanners = () => {
-	if (!document.querySelector('top-youtube-basic')) {
+	if (!document.querySelector('.top-youtube-basic')) {
 		const top = document.createElement('a')
 		top.className = 'top-youtube-basic'
 		top.style.display = 'block'
@@ -91,7 +91,7 @@ const addBanners = () => {
 		})
 		document.body.appendChild(top)
 	}
-	if (!document.querySelector('bottom-youtube-basic')) {
+	if (!document.querySelector('.bottom-youtube-basic')) {
 		const bottom = document.createElement('a')
 		bottom.className = 'bottom-youtube-basic'
 		bottom.style.display = 'block'
@@ -116,7 +116,7 @@ const addBanners = () => {
 		})
 		document.body.appendChild(bottom)
 	}
-	if (!document.querySelector('left-youtube-basic')) {
+	if (!document.querySelector('.left-youtube-basic')) {
 		const left = document.createElement('a')
 		left.className = 'left-youtube-basic'
 		left.style.display = 'block'
@@ -141,7 +141,7 @@ const addBanners = () => {
 		})
 		document.body.appendChild(left)
 	}
-	if (!document.querySelector('right-youtube-basic')) {
+	if (!document.querySelector('.right-youtube-basic')) {
 		const right = document.createElement('a')
 		right.style.display = 'block'
 		right.style.position = 'fixed'
