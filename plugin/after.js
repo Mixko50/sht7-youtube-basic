@@ -1,5 +1,6 @@
 // this code will be executed after page load
-
+var intervalLoop
+var timeout
 const loopElements = (query) => {
 	const elements = document.querySelectorAll(query)
 	elements.forEach((element) => {
@@ -8,6 +9,14 @@ const loopElements = (query) => {
 			'https://media.tenor.com/eJYeR7tKDs8AAAAC/ufabet-%E0%B8%9E%E0%B8%99%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B9%84%E0%B8%A5%E0%B8%99%E0%B9%8C.gif'
 		)
 	})
+}
+
+const startInterval = () => {
+	intervalLoop = setInterval(() => {
+		loopElements('ytd-rich-item-renderer.style-scope')
+		loopElements('ytd-compact-video-renderer')
+		loopElements('ytd-comment-renderer')
+	}, 3000)
 }
 
 const applyAdsStyle = (node) => {
@@ -35,20 +44,17 @@ const appendImage = (node, src) => {
 
 		div.addEventListener('click', () => {
 			div.remove()
+			clearInterval(intervalLoop)
+			clearTimeout(timeout)
+			timeout = setTimeout(() => {
+				intervalLoop = startInterval()
+			}, 3000)
 		})
 
 		node.appendChild(div)
 	}
 }
 
-const interval = (debounce, func) => {
-	setInterval(() => {
-		func()
-	}, debounce)
-}
-
 ;(function () {
-	interval(5000, () => loopElements('ytd-rich-item-renderer.style-scope'))
-	interval(5000, () => loopElements('ytd-compact-video-renderer'))
-	interval(5000, () => loopElements('ytd-comment-renderer'))
+	startInterval()
 })()
