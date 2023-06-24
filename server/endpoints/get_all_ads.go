@@ -5,7 +5,6 @@ import (
 	"server/database"
 	"server/types"
 	"server/types/based_response"
-	"server/utils/value"
 	"sync"
 )
 
@@ -17,12 +16,7 @@ func GetAllAds(c *fiber.Ctx) error {
 	var skyscraperAds []*database.Ads
 	go func() error {
 		if err := database.DB.Find(&skyscraperAds, "ads_type = ?", "skyscraper").Error; err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(based_response.BasedResponse[based_response.MessageResponse]{
-				Success: value.Ptr(false),
-				Data: &based_response.MessageResponse{
-					Message: value.Ptr("Unable to get skyscraper ads"),
-				},
-			})
+			return c.Status(fiber.StatusInternalServerError).JSON(based_response.ErrorResponse(err.Error))
 		}
 
 		defer wg.Done()
@@ -32,12 +26,7 @@ func GetAllAds(c *fiber.Ctx) error {
 	var leaderboardAds []*database.Ads
 	go func() error {
 		if err := database.DB.Find(&leaderboardAds, "ads_type = ?", "leaderboard").Error; err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(based_response.BasedResponse[based_response.MessageResponse]{
-				Success: value.Ptr(false),
-				Data: &based_response.MessageResponse{
-					Message: value.Ptr("Unable to get leaderboard ads"),
-				},
-			})
+			return c.Status(fiber.StatusInternalServerError).JSON(based_response.ErrorResponse(err.Error))
 		}
 
 		defer wg.Done()
@@ -47,12 +36,7 @@ func GetAllAds(c *fiber.Ctx) error {
 	var largeRectangleAds []*database.Ads
 	go func() error {
 		if err := database.DB.Find(&largeRectangleAds, "ads_type = ?", "large_rectangle").Error; err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(based_response.BasedResponse[based_response.MessageResponse]{
-				Success: value.Ptr(false),
-				Data: &based_response.MessageResponse{
-					Message: value.Ptr("Unable to get large_rectangle ads"),
-				},
-			})
+			return c.Status(fiber.StatusInternalServerError).JSON(based_response.ErrorResponse(err.Error))
 		}
 
 		defer wg.Done()
@@ -61,12 +45,9 @@ func GetAllAds(c *fiber.Ctx) error {
 
 	wg.Wait()
 
-	return c.JSON(based_response.BasedResponse[types.AdsResponse]{
-		Success: value.Ptr(true),
-		Data: &types.AdsResponse{
-			SkyScraperAds:     skyscraperAds,
-			LeaderboardAds:    leaderboardAds,
-			LargeRectangleAds: largeRectangleAds,
-		},
-	})
+	return c.JSON(based_response.SuccessResponse(&types.AdsResponse{
+		SkyScraperAds:     skyscraperAds,
+		LeaderboardAds:    leaderboardAds,
+		LargeRectangleAds: largeRectangleAds,
+	}))
 }
