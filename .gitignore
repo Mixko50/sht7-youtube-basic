@@ -1,1 +1,5 @@
+# JetBrain IDEs
 .idea
+
+# Config files
+server/config.yaml

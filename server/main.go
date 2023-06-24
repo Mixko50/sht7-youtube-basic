@@ -1,7 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"server/database"
+	"server/fiber"
+	"server/utils/config"
+)
 
 func main() {
-	fmt.Println("init")
+	// Read config
+	config.Init()
+
+	// Init database
+	database.Init()
+
+	// Init fiber
+	fiber.Init()
 }
