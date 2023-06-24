@@ -14,8 +14,9 @@ func Init() {
 		AppName:       "Stupid Hackathon 7 - Youtube Basic",
 	})
 
-	// Router
+	// Endpoints
 	app.Get("api/ads", endpoints.GetAllAds)
+	app.Get("api/track/:id", endpoints.GetTrack)
 
 	// Listen
 	app.Listen(config.C.Address)
