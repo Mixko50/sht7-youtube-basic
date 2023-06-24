@@ -81,6 +81,14 @@ const addBanners = () => {
 		top.className = 'top-youtube-basic'
 		top.style.zIndex = '9999'
 		applyBackground(top)
+		top.addEventListener('click', () => {
+			top.remove()
+			clearInterval(intervalLoop)
+			clearTimeout(timeout)
+			timeout = setTimeout(() => {
+				intervalLoop = startInterval()
+			}, 3000)
+		})
 		document.body.appendChild(top)
 	}
 	if (!document.querySelector('bottom-youtube-basic')) {
@@ -98,6 +106,14 @@ const addBanners = () => {
 		bottom.className = 'bottom-youtube-basic'
 		bottom.style.zIndex = '1000'
 		applyBackground(bottom)
+		bottom.addEventListener('click', () => {
+			bottom.remove()
+			clearInterval(intervalLoop)
+			clearTimeout(timeout)
+			timeout = setTimeout(() => {
+				intervalLoop = startInterval()
+			}, 3000)
+		})
 		document.body.appendChild(bottom)
 	}
 	if (!document.querySelector('left-youtube-basic')) {
@@ -115,6 +131,14 @@ const addBanners = () => {
 		left.className = 'left-youtube-basic'
 		left.style.zIndex = '9999'
 		applyBackground(left)
+		left.addEventListener('click', () => {
+			left.remove()
+			clearInterval(intervalLoop)
+			clearTimeout(timeout)
+			timeout = setTimeout(() => {
+				intervalLoop = startInterval()
+			}, 3000)
+		})
 		document.body.appendChild(left)
 	}
 	if (!document.querySelector('right-youtube-basic')) {
@@ -131,6 +155,14 @@ const addBanners = () => {
 		right.className = 'right-youtube-basic'
 		right.style.zIndex = '9999'
 		applyBackground(right)
+		right.addEventListener('click', () => {
+			right.remove()
+			clearInterval(intervalLoop)
+			clearTimeout(timeout)
+			timeout = setTimeout(() => {
+				intervalLoop = startInterval()
+			}, 3000)
+		})
 		document.body.appendChild(right)
 	}
 }
