@@ -27,4 +27,10 @@ func Init() {
 	}
 
 	DB = sqlDB
+
+	if config.C.AutoMigrate {
+		if err := DB.AutoMigrate(&Ads{}); err != nil {
+			panic("UNABLE TO MIGRATE GORM MODEL")
+		}
+	}
 }
